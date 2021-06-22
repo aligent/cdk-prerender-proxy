@@ -1,0 +1,36 @@
+{
+  "name": "@aligent/aws-prerender-proxy-stack",
+  "version": "0.1.0",
+  "description": "A Cloudfront Lambda@Edge stack for integrating with prerender.io",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "prepublish": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aligent/aws-cdk-prerender-proxy-stack.git"
+  },
+  "license": "GPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/aligent/aws-cdk-prerender-proxy-stack/issues"
+  },
+  "homepage": "https://github.com/aligent/aws-cdk-prerender-proxy-stack#readme",
+  "devDependencies": {
+    "@aws-cdk/assert": "^1.104.0",
+    "@types/jest": "^26.0.21",
+    "@types/node": "10.17.27",
+    "aws-cdk": "^1.104.0",
+    "jest": "^26.4.2",
+    "ts-jest": "^26.5.4",
+    "ts-node": "^9.0.0",
+    "typescript": "^3.9.9"
+  },
+  "dependencies": {
+    "@aws-cdk/core": "^1.104.0",
+    "@aws-cdk/aws-lambda-nodejs": "^1.104.0",
+    "@aws-cdk/aws-lambda": "^1.104.0",
+    "@aws-cdk/aws-cloudfront": "^1.104.0",
+    "source-map-support": "^0.5.16"
+  }
+}
