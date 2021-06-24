@@ -18,7 +18,7 @@ export class PrerenderLambdaStack extends Stack {
       'PrerenderFunction',
       {
         code: Bundling.bundle({
-          entry: `${__dirname}/../handlers/prerender.ts`,
+          entry: `${__dirname}/handlers/prerender.ts`,
           runtime: Runtime.NODEJS_12_X,
           depsLockFilePath: `${__dirname}/handlers/package-lock.json`,
           // Define options replace values at build time so we can use environment variables to test locally
