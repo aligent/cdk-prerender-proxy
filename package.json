@@ -1,6 +1,6 @@
 {
   "name": "@aligent/aws-prerender-proxy-stack",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Cloudfront Lambda@Edge stack for integrating with prerender.io",
   "main": "index.js",
   "scripts": {
