@@ -23,6 +23,8 @@ export class PrerenderFunction extends Construct {
               code: Bundling.bundle({
                 entry: `${__dirname}/handlers/prerender.ts`,
                 runtime: Runtime.NODEJS_12_X,
+                sourceMap: true,
+                projectRoot: `${__dirname}/handlers/`,
                 depsLockFilePath: `${__dirname}/handlers/package-lock.json`,
                 // Define options replace values at build time so we can use environment variables to test locally
                 // and replace during build/deploy with static values. This gets around the lambda@edge limitation
