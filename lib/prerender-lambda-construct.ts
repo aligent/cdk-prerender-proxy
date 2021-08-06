@@ -1,8 +1,8 @@
-import { StackProps, Construct, CfnOutput } from '@aws-cdk/core';
+import { Construct, CfnOutput } from '@aws-cdk/core';
 import { PrerenderFunction } from './prerender-construct';
 import { PrerenderCheckFunction } from './prerender-check-construct';
 
-export interface PrerenderLambdaProps extends StackProps {
+export interface PrerenderLambdaProps {
     redirectBackendOrigin: string,
     redirectFrontendHost: string,
     prerenderToken: string
