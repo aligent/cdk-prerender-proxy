@@ -1,16 +1,16 @@
-import { StackProps, Stack, Construct, CfnOutput } from '@aws-cdk/core';
+import { Construct, CfnOutput } from '@aws-cdk/core';
 import { PrerenderFunction } from './prerender-construct';
 import { PrerenderCheckFunction } from './prerender-check-construct';
 
-export interface PrerenderLambdaStackProps extends StackProps {
+export interface PrerenderLambdaProps {
     redirectBackendOrigin: string,
     redirectFrontendHost: string,
     prerenderToken: string
 }
 
-export class PrerenderLambdaStack extends Stack {
-  constructor(scope: Construct, id: string, props: PrerenderLambdaStackProps) {
-    super(scope, id, props);
+export class PrerenderLambda extends Construct {
+  constructor(scope: Construct, id: string, props: PrerenderLambdaProps) {
+    super(scope, id);
 
     const prerenderCheckFunction = new PrerenderCheckFunction(this, 'PrerenderViewerRequest');
     new CfnOutput(this, 'PrerenderCheckVersionARN', {
