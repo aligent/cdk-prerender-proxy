@@ -30,10 +30,16 @@ export const handler = (event: CloudFrontResponseEvent): Promise<CloudFrontRespo
     // Fetch default page and return body
     return instance.get(`https://${REDIRECT_FRONTEND_HOST}/index.html`).then((res) => {
       response.body = res.data;
+
+      
       response.headers['content-type'] = [{
         key: 'Content-Type',
         value: 'text/html'
       }];
+
+      // Remove content-length if set as this may be the value from the origin.
+      delete response.headers['content-length']
+
       return response;
     }).catch((err) => {
       return response
