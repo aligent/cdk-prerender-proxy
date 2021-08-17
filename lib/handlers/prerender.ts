@@ -45,7 +45,7 @@ export const handler = (event: CloudFrontRequestEvent): Promise<CloudFrontRespon
           ],
         }
     };
-  }).catch((_) => {
+  }).catch((err) => {
     // An error is returned when any status code except a 301 or 302
     // fallback to normal prerender behavior
 
@@ -76,13 +76,10 @@ export const handler = (event: CloudFrontRequestEvent): Promise<CloudFrontRespon
               }
           }
       };
-      return request;
    } else {
-       // When any error is returned, return out default response instead.
-       request.uri = '/index.html';
-
-       // Fallback to default behavior
-       return request;
+     request.uri = '/index.html';
    }
+
+   return request;
   });
 }
