@@ -28,7 +28,7 @@ export const handler = (event: CloudFrontResponseEvent): Promise<CloudFrontRespo
       request.uri != '/index.html') {
     
     // Fetch default page and return body
-    return instance.get('/index.html', { baseURL: REDIRECT_FRONTEND_HOST }).then((res) => {
+    return instance.get(`https://${REDIRECT_FRONTEND_HOST}/index.html`).then((res) => {
       response.body = res.data;
       response.headers['content-type'] = [{
         key: 'Content-Type',
