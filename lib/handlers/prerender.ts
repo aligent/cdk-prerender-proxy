@@ -76,11 +76,13 @@ export const handler = (event: CloudFrontRequestEvent): Promise<CloudFrontRespon
               }
           }
       };
+      return request;
    } else {
        // When any error is returned, return out default response instead.
        request.uri = '/index.html';
 
        // Fallback to default behavior
        return request;
+   }
   });
 }
