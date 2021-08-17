@@ -26,7 +26,9 @@ export const handler = (event: CloudFrontResponseEvent): Promise<CloudFrontRespo
   if (response.status != '200' && 
       ! request.headers['x-request-prerender'] &&
       request.uri != '/index.html') {
-    return instance.get(request.uri, { baseURL: REDIRECT_FRONTEND_HOST }).then((res) => {
+    
+    // Fetch default page and return body
+    return instance.get('/index.html', { baseURL: REDIRECT_FRONTEND_HOST }).then((res) => {
       response.body = res.data;
       response.headers['content-type'] = [{
         key: 'Content-Type',
@@ -34,9 +36,6 @@ export const handler = (event: CloudFrontResponseEvent): Promise<CloudFrontRespo
       }];
       return response;
     }).catch((err) => {
-      console.log(request.uri);
-      console.log(REDIRECT_FRONTEND_HOST);
-      console.log(err);
       return response
     });
   }
