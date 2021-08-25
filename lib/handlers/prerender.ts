@@ -7,6 +7,7 @@ import * as https from 'https';
 const REDIRECT_BACKEND = process.env.REDIRECT_BACKEND;
 const REDIRECT_FRONTEND_HOST = process.env.REDIRECT_FRONTEND_HOST;
 const PRERENDER_TOKEN = process.env.PRERENDER_TOKEN;
+const EXCLUSION_EXPRESSION = process.env.EXCLUSION_EXPRESSION;
 
 // Create axios client outside of lambda function for re-use between calls
 const instance = axios.create({
@@ -23,6 +24,11 @@ const instance = axios.create({
 
 export const handler = (event: CloudFrontRequestEvent): Promise<CloudFrontResponse|CloudFrontRequest> => {
   let request = event.Records[0].cf.request;
+
+  if ((new RegExp(EXCLUSION_EXPRESSION)).test(request.uri)) {
+    request.uri = '/index.html';
+    return Promise.resolve(request);
+  }
 
   // Make HEAD request to the Magento backend to see if there is a redirect for this path 
   return instance.head(request.uri, { baseURL: REDIRECT_BACKEND }).then((res) => {
