@@ -1,6 +1,7 @@
 import { Construct, CfnOutput } from '@aws-cdk/core';
 import { PrerenderFunction } from './prerender-construct';
 import { PrerenderCheckFunction } from './prerender-check-construct';
+import { ErrorResponseFunction } from './error-response-construct';
 
 export interface PrerenderLambdaProps {
     redirectBackendOrigin: string,
@@ -22,6 +23,12 @@ export class PrerenderLambda extends Construct {
     new CfnOutput(this, 'PrerenderFunctionVersionARN', {
         description: 'PrerenderFunctionVersionARN',
         value: redirectFunction.edgeFunction.currentVersion.edgeArn,
+    });
+
+    const errorResponseFunction = new ErrorResponseFunction(this, 'ErrorResponse', props);
+    new CfnOutput(this, 'ErrorResponseVersionARN', {
+        description: 'ErrorResponseVersionARN',
+        value: errorResponseFunction.edgeFunction.currentVersion.edgeArn,
     });
   }
 }

@@ -21,12 +21,12 @@ const instance = axios.create({
   httpsAgent: new https.Agent({ keepAlive: true }),
 });
 
-export const handler = async (event: CloudFrontRequestEvent): Promise<CloudFrontResponse|CloudFrontRequest> => {
+export const handler = (event: CloudFrontRequestEvent): Promise<CloudFrontResponse|CloudFrontRequest> => {
   let request = event.Records[0].cf.request;
-  try {
-    // Make HEAD request to the Magento backend to see if there is a redirect for this path 
-    let response = await instance.head(request.uri, { baseURL: REDIRECT_BACKEND });
-    let location = new URL(response.headers.location);
+
+  // Make HEAD request to the Magento backend to see if there is a redirect for this path 
+  return instance.head(request.uri, { baseURL: REDIRECT_BACKEND }).then((res) => {
+    let location = new URL(res.headers.location);
 
     // if the host matches our magento backend replace it with the frontend url
     // this allows magento to perform full url redirects if needed.
@@ -35,8 +35,8 @@ export const handler = async (event: CloudFrontRequestEvent): Promise<CloudFront
     }
 
     return <CloudFrontResponse>{
-        status: String(response.status),
-        statusDescription: response.statusText,
+        status: String(res.status),
+        statusDescription: res.statusText,
         headers: {
           Location: [
             {
@@ -45,8 +45,7 @@ export const handler = async (event: CloudFrontRequestEvent): Promise<CloudFront
           ],
         }
     };
-
-  } catch (error) {
+  }).catch((err) => {
     // An error is returned when any status code except a 301 or 302
     // fallback to normal prerender behavior
 
@@ -77,8 +76,10 @@ export const handler = async (event: CloudFrontRequestEvent): Promise<CloudFront
               }
           }
       };
+   } else {
+     request.uri = '/index.html';
    }
-    // Fallback to default behavior
-    return request;
-  }
+
+   return request;
+  });
 }
