@@ -34,7 +34,7 @@ export class PrerenderFunction extends Construct {
                   'process.env.REDIRECT_BACKEND': JSON.stringify(options.redirectBackendOrigin),
                   'process.env.REDIRECT_FRONTEND_HOST': JSON.stringify(options.redirectFrontendHost),
                   'process.env.PRERENDER_TOKEN': JSON.stringify(options.prerenderToken),
-                  'process.env.EXCLUSION_EXPRESSION': JSON.stringify(options.exclusionExpression)
+                  'process.env.EXCLUSION_EXPRESSION': options.exclusionExpression? JSON.stringify(options.exclusionExpression) : 'null'
                 }
               }),
               runtime: Runtime.NODEJS_12_X,
