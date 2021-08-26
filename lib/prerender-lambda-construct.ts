@@ -7,6 +7,7 @@ export interface PrerenderLambdaProps {
     redirectBackendOrigin: string,
     redirectFrontendHost: string,
     prerenderToken: string
+    exclusionExpression?: string
 }
 
 export class PrerenderLambda extends Construct {
