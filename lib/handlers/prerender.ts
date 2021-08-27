@@ -8,6 +8,7 @@ const REDIRECT_BACKEND = process.env.REDIRECT_BACKEND;
 const REDIRECT_FRONTEND_HOST = process.env.REDIRECT_FRONTEND_HOST;
 const PRERENDER_TOKEN = process.env.PRERENDER_TOKEN;
 const EXCLUSION_EXPRESSION = process.env.EXCLUSION_EXPRESSION;
+const PATH_PREFIX = process.env.PATH_PREFIX;
 
 // Create axios client outside of lambda function for re-use between calls
 const instance = axios.create({
@@ -26,18 +27,20 @@ export const handler = (event: CloudFrontRequestEvent): Promise<CloudFrontRespon
   let request = event.Records[0].cf.request;
 
   if ((new RegExp(EXCLUSION_EXPRESSION)).test(request.uri)) {
-    request.uri = '/index.html';
+    request.uri = `${PATH_PREFIX}/index.html`;
+    console.log(JSON.stringify(request));
     return Promise.resolve(request);
   }
 
   // Make HEAD request to the Magento backend to see if there is a redirect for this path 
-  return instance.head(request.uri, { baseURL: REDIRECT_BACKEND }).then((res) => {
+  return instance.head(request.uri.replace(PATH_PREFIX, ''), { baseURL: REDIRECT_BACKEND }).then((res) => {
     let location = new URL(res.headers.location);
 
     // if the host matches our magento backend replace it with the frontend url
     // this allows magento to perform full url redirects if needed.
     if (location.href.startsWith(REDIRECT_BACKEND)) {
       location.host = REDIRECT_FRONTEND_HOST;
+      location.pathname = `${PATH_PREFIX}${location.pathname}`;
     }
 
     return <CloudFrontResponse>{
@@ -61,8 +64,8 @@ export const handler = (event: CloudFrontRequestEvent): Promise<CloudFrontRespon
       // Cloudfront will alter the request for / to /index.html
       // since it is defined as the default root object
       // we do not want to do this when prerendering the homepage
-      if (request.uri === "/index.html") {
-           request.uri = '/';
+      if (request.uri === `${PATH_PREFIX}/index.html`) {
+           request.uri = `${PATH_PREFIX}/`;
       }
 
       request.origin = {
@@ -83,7 +86,7 @@ export const handler = (event: CloudFrontRequestEvent): Promise<CloudFrontRespon
           }
       };
    } else {
-     request.uri = '/index.html';
+     request.uri = `${PATH_PREFIX}/index.html`;
    }
 
    return request;
