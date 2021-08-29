@@ -9,6 +9,7 @@ export interface PrerenderFunctionOptions {
     redirectFrontendHost: string,
     prerenderToken: string
     exclusionExpression?: string
+    pathPrefix?: string
 }
 
 export class PrerenderFunction extends Construct {
@@ -34,6 +35,7 @@ export class PrerenderFunction extends Construct {
                   'process.env.REDIRECT_BACKEND': JSON.stringify(options.redirectBackendOrigin),
                   'process.env.REDIRECT_FRONTEND_HOST': JSON.stringify(options.redirectFrontendHost),
                   'process.env.PRERENDER_TOKEN': JSON.stringify(options.prerenderToken),
+                  'process.env.PATH_PREFIX': JSON.stringify(options.pathPrefix ?? ''),
                   'process.env.EXCLUSION_EXPRESSION': options.exclusionExpression? JSON.stringify(options.exclusionExpression) : 'null'
                 }
               }),

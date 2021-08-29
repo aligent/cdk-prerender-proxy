@@ -6,6 +6,7 @@ import { EdgeFunction } from "@aws-cdk/aws-cloudfront/lib/experimental";
 
 export interface ErrorResponseFunctionOptions {
     redirectFrontendHost: string,
+    pathPrefix?: string
 }
 
 export class ErrorResponseFunction extends Construct {
@@ -29,6 +30,7 @@ export class ErrorResponseFunction extends Construct {
                 // of no environment variables at runtime.
                 define: {
                   'process.env.REDIRECT_FRONTEND_HOST': JSON.stringify(options.redirectFrontendHost),
+                  'process.env.PATH_PREFIX': JSON.stringify(options.pathPrefix ?? ''),
                 }
               }),
               runtime: Runtime.NODEJS_12_X,
