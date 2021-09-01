@@ -4,7 +4,6 @@ import { PrerenderCheckFunction } from './prerender-check-construct';
 import { ErrorResponseFunction } from './error-response-construct';
 
 export interface PrerenderLambdaProps {
-    redirectBackendOrigin: string,
     redirectFrontendHost: string,
     prerenderToken: string
     exclusionExpression?: string
