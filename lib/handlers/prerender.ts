@@ -11,7 +11,6 @@ export const handler = async (event: CloudFrontRequestEvent): Promise<CloudFront
 
   if ((new RegExp(EXCLUSION_EXPRESSION)).test(request.uri)) {
     request.uri = `${PATH_PREFIX}/index.html`;
-    console.log(JSON.stringify(request));
     return request;
   }
 
