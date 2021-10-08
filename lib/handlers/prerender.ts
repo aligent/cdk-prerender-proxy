@@ -9,6 +9,7 @@ const REDIRECT_FRONTEND_HOST = process.env.REDIRECT_FRONTEND_HOST;
 const PRERENDER_TOKEN = process.env.PRERENDER_TOKEN;
 const EXCLUSION_EXPRESSION = process.env.EXCLUSION_EXPRESSION;
 const PATH_PREFIX = process.env.PATH_PREFIX;
+const REDIRECT_AUTH_HEADER = process.env.REDIRECT_AUTH_HEADER;
 
 // Create axios client outside of lambda function for re-use between calls
 const instance = axios.create({
@@ -85,6 +86,11 @@ export const handler = (event: CloudFrontRequestEvent): Promise<CloudFrontRespon
               }
           }
       };
+
+      if (REDIRECT_AUTH_HEADER) {
+           request.origin.custom.customHeaders['Authorization'] = REDIRECT_AUTH_HEADER
+      }
+
    } else {
      request.uri = `${PATH_PREFIX}/index.html`;
    }
