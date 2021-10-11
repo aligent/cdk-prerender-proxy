@@ -9,6 +9,7 @@ const REDIRECT_FRONTEND_HOST = process.env.REDIRECT_FRONTEND_HOST;
 const PRERENDER_TOKEN = process.env.PRERENDER_TOKEN;
 const EXCLUSION_EXPRESSION = process.env.EXCLUSION_EXPRESSION;
 const PATH_PREFIX = process.env.PATH_PREFIX;
+const REDIRECT_AUTH_HEADER = process.env.REDIRECT_AUTH_HEADER;
 
 // Create axios client outside of lambda function for re-use between calls
 const instance = axios.create({
@@ -28,12 +29,19 @@ export const handler = (event: CloudFrontRequestEvent): Promise<CloudFrontRespon
 
   if ((new RegExp(EXCLUSION_EXPRESSION)).test(request.uri)) {
     request.uri = `${PATH_PREFIX}/index.html`;
-    console.log(JSON.stringify(request));
     return Promise.resolve(request);
   }
 
+  let redirectTestConfig = {
+       baseURL: REDIRECT_BACKEND,
+  }
+
+  if (REDIRECT_AUTH_HEADER) {
+       redirectTestConfig['headers'] = {'Authorization': REDIRECT_AUTH_HEADER};
+  }
+
   // Make HEAD request to the Magento backend to see if there is a redirect for this path 
-  return instance.head(request.uri.replace(PATH_PREFIX, ''), { baseURL: REDIRECT_BACKEND }).then((res) => {
+  return instance.head(request.uri.replace(PATH_PREFIX, ''), redirectTestConfig).then((res) => {
     let location = new URL(res.headers.location);
 
     // if the host matches our magento backend replace it with the frontend url
@@ -85,6 +93,7 @@ export const handler = (event: CloudFrontRequestEvent): Promise<CloudFrontRespon
               }
           }
       };
+
    } else {
      request.uri = `${PATH_PREFIX}/index.html`;
    }
