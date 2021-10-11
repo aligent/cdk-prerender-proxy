@@ -29,12 +29,19 @@ export const handler = (event: CloudFrontRequestEvent): Promise<CloudFrontRespon
 
   if ((new RegExp(EXCLUSION_EXPRESSION)).test(request.uri)) {
     request.uri = `${PATH_PREFIX}/index.html`;
-    console.log(JSON.stringify(request));
     return Promise.resolve(request);
   }
 
+  let redirectTestConfig = {
+       baseURL: REDIRECT_BACKEND,
+  }
+
+  if (REDIRECT_AUTH_HEADER) {
+       redirectTestConfig['headers'] = {'Authorization': REDIRECT_AUTH_HEADER};
+  }
+
   // Make HEAD request to the Magento backend to see if there is a redirect for this path 
-  return instance.head(request.uri.replace(PATH_PREFIX, ''), { baseURL: REDIRECT_BACKEND }).then((res) => {
+  return instance.head(request.uri.replace(PATH_PREFIX, ''), redirectTestConfig).then((res) => {
     let location = new URL(res.headers.location);
 
     // if the host matches our magento backend replace it with the frontend url
@@ -86,10 +93,6 @@ export const handler = (event: CloudFrontRequestEvent): Promise<CloudFrontRespon
               }
           }
       };
-
-      if (REDIRECT_AUTH_HEADER) {
-           request.origin.custom.customHeaders['Authorization'] = REDIRECT_AUTH_HEADER
-      }
 
    } else {
      request.uri = `${PATH_PREFIX}/index.html`;
