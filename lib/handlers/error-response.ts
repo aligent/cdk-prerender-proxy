@@ -6,6 +6,7 @@ import * as https from 'https';
 
 const REDIRECT_FRONTEND_HOST = process.env.REDIRECT_FRONTEND_HOST;
 const PATH_PREFIX = process.env.PATH_PREFIX;
+const HTML_REGEX : RegExp = /.+\.html/;
 
 // Create axios client outside of lambda function for re-use between calls
 const instance = axios.create({
@@ -24,9 +25,9 @@ export const handler = (event: CloudFrontResponseEvent): Promise<CloudFrontRespo
   let response = event.Records[0].cf.response;
   let request = event.Records[0].cf.request;
 
-  if (response.status != '200' && 
+    if (response.status != '200' && 
       ! request.headers['x-request-prerender'] &&
-      request.uri != `${PATH_PREFIX}/index.html`) {
+      request.uri != `${PATH_PREFIX}/${HTML_REGEX}`) {
     
     // Fetch default page and return body
     return instance.get(`https://${REDIRECT_FRONTEND_HOST}${PATH_PREFIX}/index.html`).then((res) => {
