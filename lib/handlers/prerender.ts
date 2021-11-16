@@ -1,9 +1,7 @@
 import 'source-map-support/register';
 import { CloudFrontRequest, CloudFrontRequestEvent, CloudFrontResponse } from 'aws-lambda';
 
-const REDIRECT_FRONTEND_HOST = process.env.REDIRECT_FRONTEND_HOST;
 const PRERENDER_TOKEN = process.env.PRERENDER_TOKEN;
-const EXCLUSION_EXPRESSION = process.env.EXCLUSION_EXPRESSION;
 const PATH_PREFIX = process.env.PATH_PREFIX;
 
 export const handler = async (event: CloudFrontRequestEvent): Promise<CloudFrontResponse|CloudFrontRequest> => {
@@ -11,7 +9,7 @@ export const handler = async (event: CloudFrontRequestEvent): Promise<CloudFront
 
   if ((new RegExp(EXCLUSION_EXPRESSION)).test(request.uri)) {
     request.uri = `${PATH_PREFIX}/index.html`;
-    return request;
+    request.uri = `${PATH_PREFIX}/index.html`;
   }
 
   // viewer-request function will determine whether we prerender or not
