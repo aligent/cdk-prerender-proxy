@@ -4,8 +4,7 @@ import { PrerenderCheckFunction } from './prerender-check-construct';
 import { ErrorResponseFunction } from './error-response-construct';
 
 export interface PrerenderLambdaProps {
-    redirectBackendOrigin: string,
-    redirectFrontendHost: string,
+    frontendHost: string,
     prerenderToken: string
     exclusionExpression?: string
 }
@@ -20,10 +19,10 @@ export class PrerenderLambda extends Construct {
         value: prerenderCheckFunction.edgeFunction.currentVersion.edgeArn,
     });
 
-    const redirectFunction = new PrerenderFunction(this, 'PrerenderOriginRequest', props);
+    const prerenderFunction = new PrerenderFunction(this, 'PrerenderOriginRequest', props);
     new CfnOutput(this, 'PrerenderFunctionVersionARN', {
         description: 'PrerenderFunctionVersionARN',
-        value: redirectFunction.edgeFunction.currentVersion.edgeArn,
+        value: prerenderFunction.edgeFunction.currentVersion.edgeArn,
     });
 
     const errorResponseFunction = new ErrorResponseFunction(this, 'ErrorResponse', props);
