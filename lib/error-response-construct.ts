@@ -5,7 +5,6 @@ import { experimental } from '@aws-cdk/aws-cloudfront';
 import { EdgeFunction } from "@aws-cdk/aws-cloudfront/lib/experimental";
 
 export interface ErrorResponseFunctionOptions {
-    frontendHost: string,
     pathPrefix?: string
 }
 
@@ -29,7 +28,6 @@ export class ErrorResponseFunction extends Construct {
                 // and replace during build/deploy with static values. This gets around the lambda@edge limitation
                 // of no environment variables at runtime.
                 define: {
-                  'process.env.REDIRECT_FRONTEND_HOST': JSON.stringify(options.frontendHost),
                   'process.env.PATH_PREFIX': JSON.stringify(options.pathPrefix ?? ''),
                 }
               }),
