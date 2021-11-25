@@ -24,7 +24,7 @@ export class PrerenderLambda extends Construct {
         value: prerenderFunction.edgeFunction.currentVersion.edgeArn,
     });
 
-    const errorResponseFunction = new ErrorResponseFunction(this, 'ErrorResponse', props);
+    const errorResponseFunction = new ErrorResponseFunction(this, 'ErrorResponse', {});
     new CfnOutput(this, 'ErrorResponseVersionARN', {
         description: 'ErrorResponseVersionARN',
         value: errorResponseFunction.edgeFunction.currentVersion.edgeArn,
