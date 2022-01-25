@@ -9,25 +9,19 @@ export interface PrerenderLambdaProps {
 }
 
 export class PrerenderLambda extends Construct {
+
+  readonly  prerenderCheckFunction:PrerenderCheckFunction
+  readonly  prerenderFunction:PrerenderFunction
+  readonly  errorResponseFunction:ErrorResponseFunction
+
   constructor(scope: Construct, id: string, props: PrerenderLambdaProps) {
     super(scope, id);
 
-    const prerenderCheckFunction = new PrerenderCheckFunction(this, 'PrerenderViewerRequest');
-    new CfnOutput(this, 'PrerenderCheckVersionARN', {
-        description: 'PrerenderCheckVersionARN',
-        value: prerenderCheckFunction.edgeFunction.currentVersion.edgeArn,
-    });
+    this.prerenderCheckFunction = new PrerenderCheckFunction(this, 'PrerenderViewerRequest');
+   
+    this.prerenderFunction = new PrerenderFunction(this, 'PrerenderOriginRequest', props);
+    
+    this.errorResponseFunction = new ErrorResponseFunction(this, 'ErrorResponse', {});
 
-    const prerenderFunction = new PrerenderFunction(this, 'PrerenderOriginRequest', props);
-    new CfnOutput(this, 'PrerenderFunctionVersionARN', {
-        description: 'PrerenderFunctionVersionARN',
-        value: prerenderFunction.edgeFunction.currentVersion.edgeArn,
-    });
-
-    const errorResponseFunction = new ErrorResponseFunction(this, 'ErrorResponse', {});
-    new CfnOutput(this, 'ErrorResponseVersionARN', {
-        description: 'ErrorResponseVersionARN',
-        value: errorResponseFunction.edgeFunction.currentVersion.edgeArn,
-    });
   }
 }
