@@ -1,7 +1,7 @@
 # Prerender Proxy
 
 ## Archived
-Further updates can be found here https://github.com/aligent/cdk-constructs/tree/main/packages/waf
+Further updates can be found here https://github.com/aligent/cdk-constructs/tree/main/packages/prerender-proxy
 
 ## Overview
 This library provides two function constructs and a construct that creates two Lambda@Edge functions to use prerender.io as a Cloudfront Origin for site indexers (Google, Bing, etc). 
